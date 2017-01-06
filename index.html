@@ -11,6 +11,7 @@
     <section id="entry-point3"></section>
       <section id="entry-point4"></section>
         <section id="entry-point5"></section>
+        <section id="entry-point6"></section>
 
     <!-- Wifi might be spotty, so we've downloaded these to `./lib` -->
     <!-- <script src="lib/react.js"></script>
@@ -111,7 +112,8 @@ var App = React.createClass({
 ReactDOM.render(React.createElement(App, { notes: notes }), document.getElementById('entry-point4'))
     </script>
 
-
+<!-- Babel originated as a way to compile new JavaScript language features down into older forms of code that every browser can. It also includes a JSX processor. -->
+<!-- conversion of vanilla React code into the JSX format. -->
     <script type="text/babel">
     var notes = [
   { id: 1, content: 'Learn React' },
@@ -148,6 +150,46 @@ var App = React.createClass({
 })
 
 ReactDOM.render(<App notes={ notes } />, document.getElementById('entry-point5'))
+
+var App = React.createClass({
+
+  // Move notes from the top of the script into here
+  getInitialState: function () {
+    notes: [
+      { id: 1, content: 'Learn React' },
+      { id: 2, content: 'Get Lunch' },
+      { id: 3, content: 'Learn React Native' }
+    ]
+  },
+  render: function () {
+    return (
+      <section>
+        <h1>You have { this.state.notes.length } notes</h1>
+        <NotesList notes={ this.state.notes } />
+        <NotesForm onSubmit={ this.formWasSubmitted } />
+      </section>
+    )
+  },
+  formWasSubmitted: function (content) {
+    var note = {
+      id: Date.now().toString(), // cheap trick for unique ids, don't do this in production!
+      content: content
+    }
+
+    this.setState({
+      notes: this.state.notes.concat(note)
+    })
+  },
+  noteWasDestroyed: function (id) {
+    this.setState({
+      notes: this.state.notes.filter(function (note) {
+        return note.id !== id
+      })
+    })
+  }
+})
+
+ReactDOM.render(<App notes={ notes } />, document.getElementById('entry-point6'))
     </script>
   </body>
 </html>
